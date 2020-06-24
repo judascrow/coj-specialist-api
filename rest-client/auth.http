@@ -8,9 +8,9 @@ GET {{baseUrl}}/healthcheck
 ###
 
 # @name login
-POST  {{baseUrl}}/login
+POST  {{baseUrl}}/auth/login
 
 {
-    "username": "fPrice",
+    "username": "admin",
     "password": "password"
 }

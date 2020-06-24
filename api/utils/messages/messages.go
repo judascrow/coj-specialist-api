@@ -8,10 +8,12 @@ const (
 	NotPermission   = "you don't have permission to manage this resource"
 
 	// Success
+	Success               = "เรียบร้อยแล้ว"
 	Logged                = "User logged in successfully"
-	Created               = "Created Successfully"
-	Updated               = "Updated Successfully"
-	Deleted               = "Deleted successfully"
+	User                  = "ผู้ใช้งาน"
+	Created               = "เพิ่ม"
+	Updated               = "แก้ไข"
+	Deleted               = "ลบ"
 	DataFound             = "Data Found"
 	ChangePasswordSuccess = "Change Password Successfully"
 	UploadedAvatarSuccess = "Uploaded Avatar Successfully"

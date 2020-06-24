@@ -32,7 +32,6 @@ func init() {
 func drop(db *gorm.DB) {
 	db.DropTableIfExists(
 		&models.CasbinRule{},
-		&models.UserRole{},
 		&models.Role{},
 		&models.User{},
 	)
@@ -41,19 +40,11 @@ func drop(db *gorm.DB) {
 func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Role{})
-	db.AutoMigrate(&models.UserRole{})
 	db.AutoMigrate(&models.CasbinRule{})
 }
 
 func addDbConstraints(db *gorm.DB) {
 
-	dialect := db.Dialect().GetName() // mysql
-	if dialect != "sqlite3" {
-		db.Model(&models.UserRole{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-		db.Model(&models.UserRole{}).AddForeignKey("role_id", "roles(id)", "CASCADE", "CASCADE")
-	}
-
-	db.Model(&models.UserRole{}).AddIndex("user_roles__idx_user_id", "user_id")
 }
 
 func create(db *gorm.DB) {

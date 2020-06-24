@@ -11,7 +11,7 @@ import (
 
 type empty map[string]interface{}
 
-func JSON(c *gin.Context, statusCode int, dataName string, data interface{}, message interface{}) {
+func JSON(c *gin.Context, statusCode int, data interface{}, message interface{}) {
 	c.JSON(statusCode, gin.H{
 		"status":  statusCode,
 		"success": true,

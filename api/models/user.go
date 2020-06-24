@@ -17,9 +17,9 @@ type User struct {
 	Slug      string `json:"slug" form:"slug" uri:"slug"  gorm:"type:varchar(50);unique_index"`
 	Status    string `json:"status" form:"status" sql:"type:enum('A','I');DEFAULT:'A'"`
 	Avatar    string `json:"avatar" form:"avatar" `
+	RoleID    int    `json:"roleId" form:"roleId" `
 
-	Roles     []Role     `json:"roles" gorm:"many2many:users_roles;"`
-	UserRoles []UserRole `json:"users_roles" gorm:"foreignkey:UserId"`
+	Role Role `json:"role" `
 }
 
 type ChangePassword struct {
@@ -33,20 +33,10 @@ type UploadAvatar struct {
 
 func (u *User) BeforeSave(db *gorm.DB) (err error) {
 	u.Slug = slug.Make(u.Username)
-	if len(u.Roles) == 0 {
-		userRole := Role{}
-		db.Model(&Role{}).Where("name = ?", "ROLE_USER").First(&userRole)
-		u.Roles = append(u.Roles, userRole)
-	}
 	return
 }
 
 func (u User) Serialize() map[string]interface{} {
-
-	roles := []map[string]interface{}{}
-	for _, role := range u.Roles {
-		roles = append(roles, role.Serialize())
-	}
 
 	replaceAllFlag := -1
 
@@ -59,7 +49,8 @@ func (u User) Serialize() map[string]interface{} {
 		"slug":      u.Slug,
 		"status":    u.Status,
 		"avatar":    strings.Replace(u.Avatar, "\\", "/", replaceAllFlag),
-		"roles":     roles,
+		"roleId":    u.RoleID,
+		"role":      u.Role.Serialize(),
 	}
 }
 
@@ -69,19 +60,17 @@ func (user *User) GetUserStatusAsString() string {
 		return "Active"
 	case "I":
 		return "Inctive"
-	case "C":
-		return "Cancel"
 	default:
 		return "Unknown"
 	}
 }
 
 func (user *User) IsAdmin() bool {
-	for _, role := range user.Roles {
-		if role.Name == "ROLE_ADMIN" {
-			return true
-		}
+
+	if user.Role.Name == "ROLE_ADMIN" {
+		return true
 	}
+
 	return false
 }
 func (user *User) IsNotAdmin() bool {

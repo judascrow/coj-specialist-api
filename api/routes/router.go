@@ -74,6 +74,13 @@ func InitRouter() *gin.Engine {
 		users.PUT("/:slug/avatar", controllers.UploadAvatar)
 	}
 
+	// Roles API
+	roles := apiv1.Group("/roles")
+	roles.Use(authMiddleware.MiddlewareFunc())
+	{
+		roles.GET("", controllers.GetAllRoles)
+	}
+
 	return r
 }
 

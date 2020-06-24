@@ -28,11 +28,8 @@ func ClaimsOwner(c *gin.Context, slug string) bool {
 
 	claims := jwt.ExtractClaims(c)
 
-	var roles = claims["roles"].([]interface{})
-	for i := 0; i < len(roles); i++ {
-		if uint(roles[i].(float64)) == 1 {
-			return true
-		}
+	if int(claims["roleId"].(float64)) == 1 {
+		return true
 	}
 
 	if slug == claims["slug"].(string) || ClaimsIsAdmin(claims) {
@@ -43,11 +40,8 @@ func ClaimsOwner(c *gin.Context, slug string) bool {
 
 func ClaimsIsAdmin(claims jwt.MapClaims) bool {
 
-	var roles = claims["roles"].([]interface{})
-	for i := 0; i < len(roles); i++ {
-		if uint(roles[i].(float64)) == 1 {
-			return true
-		}
+	if int(claims["roleId"].(float64)) == 1 {
+		return true
 	}
 
 	return false

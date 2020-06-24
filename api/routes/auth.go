@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -35,7 +34,7 @@ type User = models.User
 
 var identityKey = "slug"
 var identityUsername = "username"
-var identityRoles = "roles"
+var identityRole = "roleId"
 
 // @Summary เข้าสู่ระบบ
 // @Description เข้าสู่ระบบ
@@ -69,14 +68,10 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*User); ok {
-				var roles []uint
-				for _, r := range v.UserRoles {
-					roles = append(roles, r.RoleID)
-				}
 				return jwt.MapClaims{
 					identityKey:      v.Slug,
 					identityUsername: v.Username,
-					identityRoles:    roles,
+					identityRole:     v.RoleID,
 				}
 			}
 			return jwt.MapClaims{}
@@ -84,15 +79,10 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 
-			var roles = claims["roles"].([]interface{})
-			userRoles := make([]models.UserRole, len(roles))
-			for i := 0; i < len(roles); i++ {
-				userRoles[i].RoleID = uint(roles[i].(float64))
-			}
 			return &User{
-				Slug:      claims["slug"].(string),
-				Username:  claims["username"].(string),
-				UserRoles: userRoles,
+				Slug:     claims["slug"].(string),
+				Username: claims["username"].(string),
+				RoleID:   int(claims["roleId"].(float64)),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
@@ -104,15 +94,15 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 			password := loginVals.Password
 
 			var user User
-			if err := db.Preload("UserRoles").Where("username = ? AND status = 'A' ", username).First(&user).Error; err != nil {
+			if err := db.Set("gorm:auto_preload", true).Where("username = ? AND status = 'A' ", username).First(&user).Error; err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}
 
 			if checkHash(password, user.Password) {
 				return &User{
-					Slug:      user.Slug,
-					Username:  user.Username,
-					UserRoles: user.UserRoles,
+					Slug:     user.Slug,
+					Username: user.Username,
+					RoleID:   user.RoleID,
 				}, nil
 			}
 
@@ -120,13 +110,9 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			//fmt.Println(len(data.(*User).UserRoles))
-			if v, ok := data.(*User); ok && v.Username != "" && len(v.UserRoles) > 0 {
-				v0 := ""
-				for _, role := range v.UserRoles {
-					v0 = strconv.Itoa(int(role.RoleID))
-					fmt.Println(v0)
-					return casbinEnforcer.Enforce(v0, c.Request.URL.String(), c.Request.Method)
-				}
+			if v, ok := data.(*User); ok && v.Username != "" && v.RoleID != 0 {
+				v0 := strconv.Itoa(v.RoleID)
+
 				return casbinEnforcer.Enforce(v0, c.Request.URL.String(), c.Request.Method)
 
 			}
@@ -138,7 +124,7 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 			slug := claims[identityKey]
 			if slug != "" {
 				db := infrastructure.GetDB()
-				db.Preload("Roles").Where("slug = ?", slug).First(&user)
+				db.Set("gorm:auto_preload", true).Where("slug = ?", slug).First(&user)
 			}
 			c.JSON(http.StatusOK, gin.H{
 				"status": http.StatusOK,

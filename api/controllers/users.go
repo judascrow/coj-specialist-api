@@ -47,7 +47,7 @@ func GetUserMe(c *gin.Context) {
 	}
 
 	// Response
-	responses.JSON(c, http.StatusOK, "user", user.Serialize(), messages.DataFound)
+	responses.JSON(c, http.StatusOK, user.Serialize(), messages.DataFound)
 }
 
 // @Summary รายการผู้ใช้งาน
@@ -110,7 +110,7 @@ func GetUserBySlug(c *gin.Context) {
 	}
 
 	// Response
-	responses.JSON(c, http.StatusOK, "user", user.Serialize(), messages.DataFound)
+	responses.JSON(c, http.StatusOK, user.Serialize(), messages.DataFound)
 }
 
 // @Summary เพิ่มผู้ใช้งาน
@@ -165,7 +165,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// Response
-	responses.JSON(c, http.StatusCreated, "user", user.Serialize(), "User "+messages.Created)
+	responses.JSON(c, http.StatusCreated, user.Serialize(), messages.Created+messages.User+messages.Success)
 }
 
 // @Summary แก้ไขผู้ใช้งาน
@@ -206,7 +206,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	responses.JSON(c, http.StatusOK, "user", user.Serialize(), "User "+messages.Updated)
+	responses.JSON(c, http.StatusOK, user.Serialize(), messages.Updated+messages.User+messages.Success)
 
 }
 
@@ -229,7 +229,7 @@ func DeleteUser(c *gin.Context) {
 		responses.ERROR(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	responses.JSONNODATA(c, http.StatusOK, "User "+messages.Deleted)
+	responses.JSONNODATA(c, http.StatusOK, messages.Deleted+messages.User+messages.Success)
 }
 
 // @Summary เปลี่ยนรหัสผ่าน
@@ -375,6 +375,6 @@ func UploadAvatar(c *gin.Context) {
 		responses.ERROR(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	responses.JSON(c, http.StatusOK, "user", user.Serialize(), messages.UploadedAvatarSuccess)
+	responses.JSON(c, http.StatusOK, user.Serialize(), messages.UploadedAvatarSuccess)
 
 }

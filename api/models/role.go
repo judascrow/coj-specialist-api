@@ -4,21 +4,8 @@ import "github.com/jinzhu/gorm"
 
 type Role struct {
 	gorm.Model
-	Name        string `gorm:"unique"`
-	Description string
-	Users       []User     `gorm:"many2many:users_roles;"`
-	UserRoles   []UserRole `gorm:"foreignkey:RoleID"`
-}
-
-type UserRole struct {
-	User   User `gorm:"association_foreignkey:UserID"`
-	UserID uint
-	Role   User `gorm:"association_foreignkey:RoleID"`
-	RoleID uint
-}
-
-func (UserRole) TableName() string {
-	return "users_roles"
+	Name        string `json:"name" gorm:"unique" example:"ROLE_USER"`
+	Description string `json:"description" example:"Only for standard users"`
 }
 
 func (r Role) Serialize() map[string]interface{} {
@@ -27,4 +14,9 @@ func (r Role) Serialize() map[string]interface{} {
 		"name":        r.Name,
 		"description": r.Description,
 	}
+}
+
+type SwagGetRoleResponse struct {
+	SwagGetBase
+	Data Role `json:"data"`
 }

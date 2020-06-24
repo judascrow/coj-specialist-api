@@ -57,8 +57,7 @@ func seedAdmin(db *gorm.DB) {
 		// query.First(&adminRole) // First would fetch the Role admin because the query status name='ROLE_ADMIN'
 		password, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
 		// Approach 1
-		user := models.User{FirstName: "AdminFN", LastName: "AdminLN", Email: "admin@golang.com", Username: "admin", Password: string(password)}
-		user.Roles = append(user.Roles, adminRole)
+		user := models.User{FirstName: "AdminFN", LastName: "AdminLN", Email: "admin@golang.com", Username: "admin", Password: string(password), RoleID: 1}
 
 		// Do not try to update the adminRole
 		db.Set("gorm:association_autoupdate", false).Create(&user)
@@ -91,8 +90,7 @@ func seedStaff(db *gorm.DB) {
 		// query.First(&adminRole) // First would fetch the Role admin because the query status name='ROLE_ADMIN'
 		password, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
 		// Approach 1
-		user := models.User{FirstName: "StaffFN", LastName: "StaffLN", Email: "staff@golang.com", Username: "staff", Password: string(password)}
-		user.Roles = append(user.Roles, staffRole)
+		user := models.User{FirstName: "StaffFN", LastName: "StaffLN", Email: "staff@golang.com", Username: "staff", Password: string(password), RoleID: 2}
 
 		// Do not try to update the adminRole
 		db.Set("gorm:association_autoupdate", false).Create(&user)
@@ -124,7 +122,7 @@ func seedUsers(db *gorm.DB) {
 		for i := 0; i < usersToSeed; i++ {
 			password, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
 			user := models.User{FirstName: fake.FirstName(), LastName: fake.LastName(), Email: fake.EmailAddress(), Username: fake.UserName(),
-				Password: string(password)}
+				Password: string(password), RoleID: 3}
 			// No need to add the role as we did for seedAdmin, it is added by the BeforeSave hook
 			db.Set("gorm:association_autoupdate", false).Create(&user)
 		}
@@ -135,8 +133,8 @@ func seedCasbinRule(db *gorm.DB) {
 	var casbinRule [3]models.CasbinRule
 
 	db.Where(&models.CasbinRule{PType: "p", V0: "1", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)|(DELETE)"}).FirstOrCreate(&casbinRule[0])
-	db.Where(&models.CasbinRule{PType: "p", V0: "2", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)|(DELETE)"}).FirstOrCreate(&casbinRule[0])
-	db.Where(&models.CasbinRule{PType: "p", V0: "3", V1: "/api/v1/users/*"}).Attrs(models.CasbinRule{V2: "(GET)|(PUT)"}).FirstOrCreate(&casbinRule[1])
+	db.Where(&models.CasbinRule{PType: "p", V0: "2", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)|(DELETE)"}).FirstOrCreate(&casbinRule[1])
+	db.Where(&models.CasbinRule{PType: "p", V0: "3", V1: "/api/v1/users/*"}).Attrs(models.CasbinRule{V2: "(GET)|(PUT)"}).FirstOrCreate(&casbinRule[2])
 
 }
 

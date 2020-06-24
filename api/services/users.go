@@ -13,7 +13,7 @@ func FindAllUsers(pageSizeStr, pageStr string) ([]models.User, PageMeta, error) 
 	var count int
 
 	db.Model(&models.User{}).Count(&count)
-	err := db.Preload("Roles").Offset((pageMeta.Page - 1) * pageMeta.PageSize).Limit(pageMeta.PageSize).Find(&users).Error
+	err := db.Set("gorm:auto_preload", true).Offset((pageMeta.Page - 1) * pageMeta.PageSize).Limit(pageMeta.PageSize).Find(&users).Error
 
 	pageMeta.TotalItemsCount = count
 	pageMeta.CurrentItemsCount = len(users)
@@ -24,21 +24,21 @@ func FindAllUsers(pageSizeStr, pageStr string) ([]models.User, PageMeta, error) 
 func FindOneUserBySlug(slug string) (models.User, error) {
 	db := infrastructure.GetDB()
 	var user models.User
-	err := db.Preload("Roles").Where(&models.User{Slug: slug}).First(&user).Error
+	err := db.Set("gorm:auto_preload", true).Where(&models.User{Slug: slug}).First(&user).Error
 	return user, err
 }
 
 func FindOneUser(condition interface{}) (models.User, error) {
 	db := infrastructure.GetDB()
 	var user models.User
-	err := db.Preload("Roles").Where(condition).First(&user).Error
+	err := db.Set("gorm:auto_preload", true).Where(condition).First(&user).Error
 	return user, err
 }
 
 func UpdateUser(slug string, data interface{}) (models.User, error) {
 	db := infrastructure.GetDB()
 	var user models.User
-	err := db.Model(user).Preload("Roles").Where(models.User{Slug: slug}).Update(data).Take(&user).Error
+	err := db.Model(user).Set("gorm:auto_preload", true).Where(models.User{Slug: slug}).Update(data).Take(&user).Error
 	return user, err
 }
 
