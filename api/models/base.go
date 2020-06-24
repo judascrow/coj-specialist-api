@@ -2,25 +2,21 @@ package models
 
 type SwagGetBase struct {
 	Success bool   `json:"success" example:"true"`       // ผลการเรียกใช้งาน
-	Status  int    `json:"status" example:"200"`         // HTTP Status Code
 	Message string `json:"message" example:"Data Found"` // ข้อความตอบกลับ
 }
 
 type SwagCreateBase struct {
 	Success bool   `json:"success" example:"true"`                 // ผลการเรียกใช้งาน
-	Status  int    `json:"status" example:"201"`                   // HTTP Status Code
 	Message string `json:"message" example:"Created Successfully"` // ข้อความตอบกลับ
 }
 
 type SwagUpdateBase struct {
 	Success bool   `json:"success" example:"true"`                 // ผลการเรียกใช้งาน
-	Status  int    `json:"status" example:"200"`                   // HTTP Status Code
 	Message string `json:"message" example:"Updated Successfully"` // ข้อความตอบกลับ
 }
 
 type SwagDeleteBase struct {
 	Success bool        `json:"success" example:"true"`                 // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"200"`                   // HTTP Status Code
 	Message string      `json:"message" example:"Deleted Successfully"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                                  // ข้อมูล
 }
@@ -42,21 +38,18 @@ type SwagPageMeta struct {
 
 type SwagError400 struct {
 	Success bool        `json:"success" example:"false"`       // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"400"`          // HTTP Status Code
 	Message string      `json:"message" example:"Bad Request"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                         // ข้อมูล
 }
 
 type SwagError404 struct {
 	Success bool        `json:"success" example:"false"`     // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"404"`        // HTTP Status Code
 	Message string      `json:"message" example:"Not Found"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                       // ข้อมูล
 }
 
 type SwagError500 struct {
 	Success bool        `json:"success" example:"false"`                 // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"500"`                    // HTTP Status Code
 	Message string      `json:"message" example:"Internal Server Error"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                                   // ข้อมูล
 }
@@ -67,7 +60,6 @@ type SwagID struct {
 
 type SwagLogin struct {
 	Success bool     `json:"success" example:"true"`                        // ผลการเรียกใช้งาน
-	Status  int      `json:"status" example:"200"`                          // HTTP Status Code
 	Message string   `json:"message" example:"User logged in successfully"` // ข้อความตอบกลับ
 	Token   string   `json:"token" example:"eyJhbGciOiJIUzI1NiIsI"`         // token
 	Data    SwagUser `json:"data" `

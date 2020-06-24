@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "Rest API document \u003cstyle\u003e.models {display: none !important}\u003c/style\u003e",
-        "title": "Example API",
+        "title": "COJ Specialist API",
         "termsOfService": "COJ",
         "contact": {},
         "license": {},
@@ -11,7 +11,7 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/login": {
+        "/auth/login": {
             "post": {
                 "description": "เข้าสู่ระบบ",
                 "consumes": [
@@ -21,7 +21,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "เข้าสู่ระบบ"
+                    "Authentication"
                 ],
                 "summary": "เข้าสู่ระบบ",
                 "parameters": [
@@ -45,8 +45,157 @@
                 }
             }
         },
+        "/auth/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "ข้อมูลตนเอง",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "ข้อมูลตนเอง",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagGetUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError400"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError404"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError500"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "สมัครเข้าใช้งาน",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "สมัครเข้าใช้งาน",
+                "parameters": [
+                    {
+                        "description": "สมัครเข้าใช้งาน",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RegisterUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagCreateUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError400"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError404"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError500"
+                        }
+                    }
+                }
+            }
+        },
+        "/roles": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "รายการสิทธิ์การใช้งาน",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "รายการสิทธิ์การใช้งาน",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagGetRoleResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError400"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError404"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError500"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "รายการผู้ใช้งาน",
                 "consumes": [
                     "application/json"
@@ -55,7 +204,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "รายการผู้ใช้งาน",
                 "responses": {
@@ -99,7 +248,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "เพิ่มผู้ใช้งาน",
                 "parameters": [
@@ -143,6 +292,11 @@
         },
         "/users/{slug}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "ข้อมูลผู้ใช้งาน",
                 "consumes": [
                     "application/json"
@@ -151,7 +305,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "ข้อมูลผู้ใช้งาน",
                 "parameters": [
@@ -204,7 +358,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "แก้ไขผู้ใช้งาน",
                 "parameters": [
@@ -266,7 +420,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "ลบผู้ใช้งาน",
                 "parameters": [
@@ -306,8 +460,72 @@
                 }
             }
         },
+        "/users/{slug}/avatar": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "อัพโหลดรูป avatar",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "อัพโหลดรูป avatar",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "slug ผู้ใช้งาน",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "อัพโหลดรูป avatar",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UploadAvatar"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagUploadAvatarResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError400"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError404"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.SwagError500"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{slug}/password": {
-            "put": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -321,7 +539,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ผู้ใช้งาน"
+                    "User"
                 ],
                 "summary": "เปลี่ยนรหัสผ่าน",
                 "parameters": [
@@ -391,6 +609,50 @@
                 }
             }
         },
+        "models.RegisterUser": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Role": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Only for standard users"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "user"
+                },
+                "nameTh": {
+                    "type": "string",
+                    "example": "ผู้ใช้งานทั่วไป"
+                }
+            }
+        },
         "models.SwagChangePasswordResponse": {
             "type": "object",
             "properties": {
@@ -402,11 +664,6 @@
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "Change Password Successfully"
-                },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -420,22 +677,12 @@
             "properties": {
                 "data": {
                     "type": "object",
-                    "properties": {
-                        "users": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.SwagUser"
-                        }
-                    }
+                    "$ref": "#/definitions/models.SwagUser"
                 },
                 "message": {
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "Created Successfully"
-                },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 201
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -456,11 +703,6 @@
                     "type": "string",
                     "example": "Deleted Successfully"
                 },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
-                },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
                     "type": "boolean",
@@ -479,11 +721,6 @@
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "Bad Request"
-                },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 400
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -504,11 +741,6 @@
                     "type": "string",
                     "example": "Not Found"
                 },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 404
-                },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
                     "type": "boolean",
@@ -528,11 +760,6 @@
                     "type": "string",
                     "example": "Internal Server Error"
                 },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 500
-                },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
                     "type": "boolean",
@@ -544,18 +771,9 @@
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "object",
-                    "properties": {
-                        "pageMeta": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.SwagPageMeta"
-                        },
-                        "users": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.SwagUser"
-                            }
-                        }
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.SwagUser"
                     }
                 },
                 "message": {
@@ -563,10 +781,28 @@
                     "type": "string",
                     "example": "Data Found"
                 },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
+                "pageMeta": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.SwagPageMeta"
+                },
+                "success": {
+                    "description": "ผลการเรียกใช้งาน",
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "models.SwagGetRoleResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Role"
+                },
+                "message": {
+                    "description": "ข้อความตอบกลับ",
+                    "type": "string",
+                    "example": "Data Found"
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -580,22 +816,12 @@
             "properties": {
                 "data": {
                     "type": "object",
-                    "properties": {
-                        "users": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.SwagUser"
-                        }
-                    }
+                    "$ref": "#/definitions/models.SwagUser"
                 },
                 "message": {
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "Data Found"
-                },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -615,11 +841,6 @@
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "User logged in successfully"
-                },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -691,22 +912,31 @@
             "properties": {
                 "data": {
                     "type": "object",
-                    "properties": {
-                        "users": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.SwagUser"
-                        }
-                    }
+                    "$ref": "#/definitions/models.SwagUser"
                 },
                 "message": {
                     "description": "ข้อความตอบกลับ",
                     "type": "string",
                     "example": "Updated Successfully"
                 },
-                "status": {
-                    "description": "HTTP Status Code",
-                    "type": "integer",
-                    "example": 200
+                "success": {
+                    "description": "ผลการเรียกใช้งาน",
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "models.SwagUploadAvatarResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "ข้อมูล",
+                    "type": "object"
+                },
+                "message": {
+                    "description": "ข้อความตอบกลับ",
+                    "type": "string",
+                    "example": "Uploaded Avatar Successfully"
                 },
                 "success": {
                     "description": "ผลการเรียกใช้งาน",
@@ -827,6 +1057,19 @@
                     "description": "Username",
                     "type": "string",
                     "example": "user01"
+                }
+            }
+        },
+        "models.UploadAvatar": {
+            "type": "object",
+            "required": [
+                "avatar"
+            ],
+            "properties": {
+                "avatar": {
+                    "description": "รูปภาพ",
+                    "type": "string",
+                    "example": "avatar.png"
                 }
             }
         },

@@ -5,7 +5,7 @@ import (
 	_ "github.com/judascrow/cojspcl-api/docs"
 )
 
-// @title Example API
+// @title COJ Specialist API
 // @version 1.0
 // @description Rest API document <style>.models {display: none !important}</style>
 // @termsOfService COJ

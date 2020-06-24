@@ -15,11 +15,12 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var StringNumberRunes = []rune("1234567890")
 
 func randomInt(min, max int) int {
-
+	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(max-min) + min
 }
 
 func randomString(length int) string {
+	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, length)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
@@ -28,6 +29,7 @@ func randomString(length int) string {
 }
 
 func randomStringNumber(length int) string {
+	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, length)
 	for i := range b {
 		b[i] = StringNumberRunes[rand.Intn(len(StringNumberRunes))]
@@ -37,8 +39,8 @@ func randomStringNumber(length int) string {
 
 func seedAdmin(db *gorm.DB) {
 	count := 0
-	adminRole := models.Role{Name: "ROLE_ADMIN", Description: "Only for admin"}
-	query := db.Model(&models.Role{}).Where("name = ?", "ROLE_ADMIN")
+	adminRole := models.Role{Name: "admin", NameTH: "ผู้ดูแลระบบ", Description: "Only for admin"}
+	query := db.Model(&models.Role{}).Where("name = ?", "admin")
 	query.Count(&count)
 
 	if count == 0 {
@@ -70,8 +72,8 @@ func seedAdmin(db *gorm.DB) {
 
 func seedStaff(db *gorm.DB) {
 	count := 0
-	staffRole := models.Role{Name: "ROLE_STAFF", Description: "Only for staff"}
-	query := db.Model(&models.Role{}).Where("name = ?", "ROLE_STAFF")
+	staffRole := models.Role{Name: "staff", NameTH: "เจ้าหน้าที่", Description: "Only for staff"}
+	query := db.Model(&models.Role{}).Where("name = ?", "staff")
 	query.Count(&count)
 
 	if count == 0 {
@@ -103,8 +105,8 @@ func seedStaff(db *gorm.DB) {
 
 func seedUsers(db *gorm.DB) {
 	count := 0
-	role := models.Role{Name: "ROLE_USER", Description: "Only for standard users"}
-	q := db.Model(&models.Role{}).Where("name = ?", "ROLE_USER")
+	role := models.Role{Name: "user", NameTH: "ผู้ใช้งานทั่วไป", Description: "Only for standard users"}
+	q := db.Model(&models.Role{}).Where("name = ?", "user")
 	q.Count(&count)
 
 	if count == 0 {

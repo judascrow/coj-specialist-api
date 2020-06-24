@@ -9,15 +9,15 @@ import (
 
 type User struct {
 	gorm.Model
-	Username  string `json:"username" form:"username" gorm:"type:varchar(50);not null;unique_index" binding:"required"`
-	Password  string `json:"password" form:"password" gorm:"not null" binding:"required"`
+	Username  string `json:"username" form:"username" gorm:"type:varchar(50);not null;unique_index" binding:"required,min=6,max=50"`
+	Password  string `json:"password" form:"password" gorm:"not null" binding:"required,min=6,max=20"`
 	FirstName string `json:"firstName" form:"firstName" gorm:"type:varchar(100);not null" binding:"required"`
 	LastName  string `json:"lastName" form:"lastName" gorm:"type:varchar(100);not null" binding:"required"`
-	Email     string `json:"email" form:"email" gorm:"type:varchar(100);unique_index"`
+	Email     string `json:"email" form:"email" gorm:"type:varchar(100);unique_index" binding:"required,email"`
 	Slug      string `json:"slug" form:"slug" uri:"slug"  gorm:"type:varchar(50);unique_index"`
 	Status    string `json:"status" form:"status" sql:"type:enum('A','I');DEFAULT:'A'"`
-	Avatar    string `json:"avatar" form:"avatar" `
-	RoleID    int    `json:"roleId" form:"roleId" `
+	Avatar    string `json:"avatar" form:"avatar"`
+	RoleID    int    `json:"roleId" form:"roleId"`
 
 	Role Role `json:"role" `
 }
@@ -67,12 +67,22 @@ func (user *User) GetUserStatusAsString() string {
 
 func (user *User) IsAdmin() bool {
 
-	if user.Role.Name == "ROLE_ADMIN" {
+	if user.Role.Name == "admin" {
 		return true
 	}
 
 	return false
 }
+
+func (user *User) IsStaff() bool {
+
+	if user.Role.Name == "staff" {
+		return true
+	}
+
+	return false
+}
+
 func (user *User) IsNotAdmin() bool {
 	return !user.IsAdmin()
 }
@@ -102,43 +112,33 @@ type SwagUserBodyIncludePassword struct {
 
 type SwagGetAllUsersResponse struct {
 	SwagGetBase
-	Data struct {
-		PageMeta SwagPageMeta `json:"pageMeta"`
-		Users    []SwagUser   `json:"users"`
-	} `json:"data"`
+	Data     []SwagUser   `json:"data"`
+	PageMeta SwagPageMeta `json:"pageMeta"`
 }
 
 type SwagGetUserResponse struct {
 	SwagGetBase
-	Data struct {
-		Users SwagUser `json:"users"`
-	} `json:"data"`
+	Data SwagUser `json:"data"`
 }
 
 type SwagCreateUserResponse struct {
 	SwagCreateBase
-	Data struct {
-		Users SwagUser `json:"users"`
-	} `json:"data"`
+	Data SwagUser `json:"data"`
 }
 
 type SwagUpdateUserResponse struct {
 	SwagUpdateBase
-	Data struct {
-		Users SwagUser `json:"users"`
-	} `json:"data"`
+	Data SwagUser `json:"data"`
 }
 
 type SwagChangePasswordResponse struct {
 	Success bool        `json:"success" example:"true"`                         // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"200"`                           // HTTP Status Code
 	Message string      `json:"message" example:"Change Password Successfully"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                                          // ข้อมูล
 }
 
 type SwagUploadAvatarResponse struct {
 	Success bool        `json:"success" example:"true"`                         // ผลการเรียกใช้งาน
-	Status  int         `json:"status" example:"200"`                           // HTTP Status Code
 	Message string      `json:"message" example:"Uploaded Avatar Successfully"` // ข้อความตอบกลับ
 	Data    interface{} `json:"data" `                                          // ข้อมูล
 }

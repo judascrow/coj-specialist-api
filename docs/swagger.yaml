@@ -14,6 +14,37 @@ definitions:
     - current_password
     - new_password
     type: object
+  models.RegisterUser:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - username
+    type: object
+  models.Role:
+    properties:
+      description:
+        example: Only for standard users
+        type: string
+      name:
+        example: user
+        type: string
+      nameTh:
+        example: ผู้ใช้งานทั่วไป
+        type: string
+    type: object
   models.SwagChangePasswordResponse:
     properties:
       data:
@@ -23,10 +54,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: Change Password Successfully
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -35,19 +62,12 @@ definitions:
   models.SwagCreateUserResponse:
     properties:
       data:
-        properties:
-          users:
-            $ref: '#/definitions/models.SwagUser'
-            type: object
+        $ref: '#/definitions/models.SwagUser'
         type: object
       message:
         description: ข้อความตอบกลับ
         example: Created Successfully
         type: string
-      status:
-        description: HTTP Status Code
-        example: 201
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -62,10 +82,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: Deleted Successfully
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -80,10 +96,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: Bad Request
         type: string
-      status:
-        description: HTTP Status Code
-        example: 400
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: false
@@ -98,10 +110,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: Not Found
         type: string
-      status:
-        description: HTTP Status Code
-        example: 404
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: false
@@ -116,10 +124,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: Internal Server Error
         type: string
-      status:
-        description: HTTP Status Code
-        example: 500
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: false
@@ -128,23 +132,30 @@ definitions:
   models.SwagGetAllUsersResponse:
     properties:
       data:
-        properties:
-          pageMeta:
-            $ref: '#/definitions/models.SwagPageMeta'
-            type: object
-          users:
-            items:
-              $ref: '#/definitions/models.SwagUser'
-            type: array
+        items:
+          $ref: '#/definitions/models.SwagUser'
+        type: array
+      message:
+        description: ข้อความตอบกลับ
+        example: Data Found
+        type: string
+      pageMeta:
+        $ref: '#/definitions/models.SwagPageMeta'
+        type: object
+      success:
+        description: ผลการเรียกใช้งาน
+        example: true
+        type: boolean
+    type: object
+  models.SwagGetRoleResponse:
+    properties:
+      data:
+        $ref: '#/definitions/models.Role'
         type: object
       message:
         description: ข้อความตอบกลับ
         example: Data Found
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -153,19 +164,12 @@ definitions:
   models.SwagGetUserResponse:
     properties:
       data:
-        properties:
-          users:
-            $ref: '#/definitions/models.SwagUser'
-            type: object
+        $ref: '#/definitions/models.SwagUser'
         type: object
       message:
         description: ข้อความตอบกลับ
         example: Data Found
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -180,10 +184,6 @@ definitions:
         description: ข้อความตอบกลับ
         example: User logged in successfully
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -235,19 +235,26 @@ definitions:
   models.SwagUpdateUserResponse:
     properties:
       data:
-        properties:
-          users:
-            $ref: '#/definitions/models.SwagUser'
-            type: object
+        $ref: '#/definitions/models.SwagUser'
         type: object
       message:
         description: ข้อความตอบกลับ
         example: Updated Successfully
         type: string
-      status:
-        description: HTTP Status Code
-        example: 200
-        type: integer
+      success:
+        description: ผลการเรียกใช้งาน
+        example: true
+        type: boolean
+    type: object
+  models.SwagUploadAvatarResponse:
+    properties:
+      data:
+        description: ข้อมูล
+        type: object
+      message:
+        description: ข้อความตอบกลับ
+        example: Uploaded Avatar Successfully
+        type: string
       success:
         description: ผลการเรียกใช้งาน
         example: true
@@ -342,6 +349,15 @@ definitions:
         example: user01
         type: string
     type: object
+  models.UploadAvatar:
+    properties:
+      avatar:
+        description: รูปภาพ
+        example: avatar.png
+        type: string
+    required:
+    - avatar
+    type: object
   routes.login:
     properties:
       password:
@@ -358,10 +374,10 @@ info:
   description: 'Rest API document <style>.models {display: none !important}</style>'
   license: {}
   termsOfService: COJ
-  title: Example API
+  title: COJ Specialist API
   version: "1.0"
 paths:
-  /login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -382,7 +398,99 @@ paths:
             $ref: '#/definitions/models.SwagLogin'
       summary: เข้าสู่ระบบ
       tags:
-      - เข้าสู่ระบบ
+      - Authentication
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: ข้อมูลตนเอง
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SwagGetUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.SwagError400'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.SwagError404'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.SwagError500'
+      security:
+      - ApiKeyAuth: []
+      summary: ข้อมูลตนเอง
+      tags:
+      - Authentication
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: สมัครเข้าใช้งาน
+      parameters:
+      - description: สมัครเข้าใช้งาน
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.SwagCreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.SwagError400'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.SwagError404'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.SwagError500'
+      summary: สมัครเข้าใช้งาน
+      tags:
+      - Authentication
+  /roles:
+    get:
+      consumes:
+      - application/json
+      description: รายการสิทธิ์การใช้งาน
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SwagGetRoleResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.SwagError400'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.SwagError404'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.SwagError500'
+      security:
+      - ApiKeyAuth: []
+      summary: รายการสิทธิ์การใช้งาน
+      tags:
+      - Role
   /users:
     get:
       consumes:
@@ -407,9 +515,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.SwagError500'
+      security:
+      - ApiKeyAuth: []
       summary: รายการผู้ใช้งาน
       tags:
-      - ผู้ใช้งาน
+      - User
     post:
       consumes:
       - application/json
@@ -444,7 +554,7 @@ paths:
       - ApiKeyAuth: []
       summary: เพิ่มผู้ใช้งาน
       tags:
-      - ผู้ใช้งาน
+      - User
   /users/{slug}:
     delete:
       consumes:
@@ -479,7 +589,7 @@ paths:
       - ApiKeyAuth: []
       summary: ลบผู้ใช้งาน
       tags:
-      - ผู้ใช้งาน
+      - User
     get:
       consumes:
       - application/json
@@ -509,9 +619,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.SwagError500'
+      security:
+      - ApiKeyAuth: []
       summary: ข้อมูลผู้ใช้งาน
       tags:
-      - ผู้ใช้งาน
+      - User
     put:
       consumes:
       - application/json
@@ -551,9 +663,50 @@ paths:
       - ApiKeyAuth: []
       summary: แก้ไขผู้ใช้งาน
       tags:
-      - ผู้ใช้งาน
+      - User
+  /users/{slug}/avatar:
+    post:
+      consumes:
+      - application/json
+      description: อัพโหลดรูป avatar
+      parameters:
+      - description: slug ผู้ใช้งาน
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: อัพโหลดรูป avatar
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UploadAvatar'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.SwagUploadAvatarResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.SwagError400'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.SwagError404'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.SwagError500'
+      security:
+      - ApiKeyAuth: []
+      summary: อัพโหลดรูป avatar
+      tags:
+      - User
   /users/{slug}/password:
-    put:
+    post:
       consumes:
       - application/json
       description: เปลี่ยนรหัสผ่าน
@@ -592,7 +745,7 @@ paths:
       - ApiKeyAuth: []
       summary: เปลี่ยนรหัสผ่าน
       tags:
-      - ผู้ใช้งาน
+      - User
 securityDefinitions:
   ApiKeyAuth:
     in: header

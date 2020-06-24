@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 
 	"github.com/judascrow/cojspcl-api/api/models"
-	jwt "github.com/judascrow/gomiddlewares/jwt"
 
 	"github.com/judascrow/cojspcl-api/api/services"
 	"github.com/judascrow/cojspcl-api/api/utils/messages"
@@ -17,48 +16,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// @Summary ข้อมูลตนเอง
-// @Description ข้อมูลตนเอง
-// @Tags ผู้ใช้งาน
-// @Accept  json
-// @Produce  json
-// @Success 200 {object} models.SwagGetUserResponse
-// @Failure 400 {object} models.SwagError400
-// @Failure 404 {object} models.SwagError404
-// @Failure 500 {object} models.SwagError500
-// @Security ApiKeyAuth
-// @Router /auth/me [get]
-func GetUserMe(c *gin.Context) {
-
-	claims := jwt.ExtractClaims(c)
-
-	slug := claims["slug"].(string)
-
-	if !ClaimsOwner(c, slug) {
-		responses.ERROR(c, http.StatusForbidden, messages.NotPermission)
-		return
-	}
-
-	// Find User
-	user, err := services.FindOneUserBySlug(slug)
-	if err != nil {
-		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
-		return
-	}
-
-	// Response
-	responses.JSON(c, http.StatusOK, user.Serialize(), messages.DataFound)
-}
-
 // @Summary รายการผู้ใช้งาน
 // @Description รายการผู้ใช้งาน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} models.SwagGetAllUsersResponse
 // @Failure 400 {object} models.SwagError400
 // @Failure 404 {object} models.SwagError404
 // @Failure 500 {object} models.SwagError500
+// @Security ApiKeyAuth
 // @Router /users [get]
 func GetAllUsers(c *gin.Context) {
 	// Query Pages
@@ -84,7 +51,7 @@ func GetAllUsers(c *gin.Context) {
 
 // @Summary ข้อมูลผู้ใช้งาน
 // @Description ข้อมูลผู้ใช้งาน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "slug ผู้ใช้งาน"
@@ -92,6 +59,7 @@ func GetAllUsers(c *gin.Context) {
 // @Failure 400 {object} models.SwagError400
 // @Failure 404 {object} models.SwagError404
 // @Failure 500 {object} models.SwagError500
+// @Security ApiKeyAuth
 // @Router /users/{slug} [get]
 func GetUserBySlug(c *gin.Context) {
 	// Get Slug from URI
@@ -115,7 +83,7 @@ func GetUserBySlug(c *gin.Context) {
 
 // @Summary เพิ่มผู้ใช้งาน
 // @Description เพิ่มผู้ใช้งาน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param user body models.SwagUserBodyIncludePassword true "เพิ่มผู้ใช้งาน"
@@ -146,6 +114,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 	// Check email duplicate
+
 	userCond = models.User{Email: user.Email}
 	_, err = services.FindOneUser(userCond)
 	if err == nil {
@@ -164,13 +133,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	// Find User
+	user, err = services.FindOneUserBySlug(user.Slug)
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
 	// Response
 	responses.JSON(c, http.StatusCreated, user.Serialize(), messages.Created+messages.User+messages.Success)
 }
 
 // @Summary แก้ไขผู้ใช้งาน
 // @Description แก้ไขผู้ใช้งาน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "slug ผู้ใช้งาน"
@@ -212,7 +188,7 @@ func UpdateUser(c *gin.Context) {
 
 // @Summary ลบผู้ใช้งาน
 // @Description ลบผู้ใช้งาน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "slug ผู้ใช้งาน"
@@ -229,12 +205,12 @@ func DeleteUser(c *gin.Context) {
 		responses.ERROR(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	responses.JSONNODATA(c, http.StatusOK, messages.Deleted+messages.User+messages.Success)
+	responses.JSONNODATA(c, http.StatusNoContent, messages.Deleted+messages.User+messages.Success)
 }
 
 // @Summary เปลี่ยนรหัสผ่าน
 // @Description เปลี่ยนรหัสผ่าน
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "slug ผู้ใช้งาน"
@@ -244,7 +220,7 @@ func DeleteUser(c *gin.Context) {
 // @Failure 404 {object} models.SwagError404
 // @Failure 500 {object} models.SwagError500
 // @Security ApiKeyAuth
-// @Router /users/{slug}/password [put]
+// @Router /users/{slug}/password [post]
 func ChangePassword(c *gin.Context) {
 
 	slug := c.Param("slug")
@@ -316,7 +292,7 @@ func ChangePassword(c *gin.Context) {
 
 // @Summary อัพโหลดรูป avatar
 // @Description อัพโหลดรูป avatar
-// @Tags ผู้ใช้งาน
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Param slug path string true "slug ผู้ใช้งาน"
@@ -326,7 +302,7 @@ func ChangePassword(c *gin.Context) {
 // @Failure 404 {object} models.SwagError404
 // @Failure 500 {object} models.SwagError500
 // @Security ApiKeyAuth
-// @Router /users/{slug}/avatar [put]
+// @Router /users/{slug}/avatar [post]
 func UploadAvatar(c *gin.Context) {
 
 	slug := c.Param("slug")
@@ -350,7 +326,7 @@ func UploadAvatar(c *gin.Context) {
 
 	if avatar != nil {
 		imgNameAvatar := randomString(16) + ".png"
-		dirPath := filepath.Join(".", "media", "avatar")
+		dirPath := filepath.Join(".", "upload", "avatar")
 		filePathAvatar := filepath.Join(dirPath, imgNameAvatar)
 		if _, err = os.Stat(dirPath); os.IsNotExist(err) {
 			err = os.MkdirAll(dirPath, os.ModeDir)

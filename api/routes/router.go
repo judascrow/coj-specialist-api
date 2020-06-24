@@ -39,29 +39,31 @@ func InitRouter() *gin.Engine {
 
 	r.MaxMultipartMemory = 8 << 20
 	// File Server
-	r.Use(static.Serve("/media", static.LocalFile("./media", false)))
+	r.Use(static.Serve("/upload", static.LocalFile("./upload", false)))
 
 	// Routes
 	apiv1 := r.Group(os.Getenv("APP_API_BASE_URL"))
 
-	// swagger
+	// Swagger
 	apiv1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// healthcheck
+	// Healthcheck
 	apiv1.GET("/healthcheck", Healthcheck)
 
-	// auth
+	// Auth Middleware
 	authMiddleware := AuthMiddlewareJWT()
 
+	// Auth API
 	auth := apiv1.Group("/auth")
+	auth.GET("/refresh_token", authMiddleware.RefreshHandler) // Refresh time can be longer than token timeout
 	auth.POST("/login", authMiddleware.LoginHandler)
-	// Refresh time can be longer than token timeout
-	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+	auth.POST("/register", controllers.Register)
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
 		auth.GET("/me", controllers.GetUserMe)
 	}
-	// Users API
+
+	// User API
 	users := apiv1.Group("/users")
 	users.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -70,11 +72,11 @@ func InitRouter() *gin.Engine {
 		users.POST("", controllers.CreateUser)
 		users.PUT("/:slug", controllers.UpdateUser)
 		users.DELETE("/:slug", controllers.DeleteUser)
-		users.PUT("/:slug/password", controllers.ChangePassword)
-		users.PUT("/:slug/avatar", controllers.UploadAvatar)
+		users.POST("/:slug/password", controllers.ChangePassword)
+		users.POST("/:slug/avatar", controllers.UploadAvatar)
 	}
 
-	// Roles API
+	// Role API
 	roles := apiv1.Group("/roles")
 	roles.Use(authMiddleware.MiddlewareFunc())
 	{

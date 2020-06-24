@@ -38,7 +38,7 @@ var identityRole = "roleId"
 
 // @Summary เข้าสู่ระบบ
 // @Description เข้าสู่ระบบ
-// @Tags เข้าสู่ระบบ
+// @Tags Authentication
 // @Accept  json
 // @Produce  json
 // @Param login body login true "ลงชื่อเข้าสู่ระบบ"
@@ -127,9 +127,8 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 				db.Set("gorm:auto_preload", true).Where("slug = ?", slug).First(&user)
 			}
 			c.JSON(http.StatusOK, gin.H{
-				"status": http.StatusOK,
-				"token":  token,
-				// "expire":  t.Format(time.RFC3339),
+				"token":   token,
+				"expire":  t.Format(time.RFC3339),
 				"success": true,
 				"message": messages.Logged,
 				"data":    user.Serialize(),
@@ -138,7 +137,6 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.JSON(code, gin.H{
 				"success": false,
-				"status":  code,
 				"message": message,
 				"data":    map[string]interface{}{},
 			})

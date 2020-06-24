@@ -12,13 +12,14 @@ import (
 
 // @Summary รายการสิทธิ์การใช้งาน
 // @Description รายการสิทธิ์การใช้งาน
-// @Tags สิทธิ์การใช้งาน
+// @Tags Role
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} models.SwagGetRoleResponse
 // @Failure 400 {object} models.SwagError400
 // @Failure 404 {object} models.SwagError404
 // @Failure 500 {object} models.SwagError500
+// @Security ApiKeyAuth
 // @Router /roles [get]
 func GetAllRoles(c *gin.Context) {
 	// Find Users

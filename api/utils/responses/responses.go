@@ -13,7 +13,6 @@ type empty map[string]interface{}
 
 func JSON(c *gin.Context, statusCode int, data interface{}, message interface{}) {
 	c.JSON(statusCode, gin.H{
-		"status":  statusCode,
 		"success": true,
 		"data":    data,
 		"message": message,
@@ -57,7 +56,6 @@ func JSONLIST(c *gin.Context, statusCode int, dataName string, data interface{},
 	pageMeta["prevPageUrl"] = fmt.Sprintf("%s?page=%d&pageSize=%d", c.Request.URL.Path, pageMeta["prevPageNumber"], pageMeta["requestedPageSize"])
 
 	c.JSON(statusCode, gin.H{
-		"status":   statusCode,
 		"success":  true,
 		"pageMeta": pageMeta,
 		"data":     data,
@@ -68,7 +66,6 @@ func JSONLIST(c *gin.Context, statusCode int, dataName string, data interface{},
 
 func JSONNODATA(c *gin.Context, statusCode int, message interface{}) {
 	c.JSON(statusCode, gin.H{
-		"status":  statusCode,
 		"success": true,
 		"data":    empty{},
 		"message": message,
@@ -80,7 +77,6 @@ func ERROR(c *gin.Context, statusCode int, messageError interface{}) {
 
 	if reflect.TypeOf(messageError).String() == "string" {
 		c.JSON(statusCode, gin.H{
-			"status":  statusCode,
 			"success": false,
 			"data":    empty{},
 			"message": messageError,
@@ -89,7 +85,6 @@ func ERROR(c *gin.Context, statusCode int, messageError interface{}) {
 	}
 
 	c.JSON(statusCode, gin.H{
-		"status":  statusCode,
 		"success": false,
 		"data":    empty{},
 		"message": "Validation Failed",

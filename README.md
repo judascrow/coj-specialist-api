@@ -1,4 +1,4 @@
-# Golang API Starter
+# Coj Specialist API
 
 ##### Golang v.1.14
 
@@ -6,11 +6,6 @@ Install:
 
 ```
 git clone https://github.com/judascrow/cojspcl-api.git
-rm .git
-rm go.mod
-rm go.sum
-go mod init <New Mudule>
-git init
 cp .env.example .env
 ```
 
@@ -53,11 +48,13 @@ Base Path: /api/v1
 
 ### Auth
 
-| Done               | Method | URI         | authorize | comment |
-| ------------------ | ------ | ----------- | --------- | ------- |
-| :white_check_mark: | POST   | /auth/login | No        | Log in  |
+| Done               | Method | URI            | authorize | comment  |
+| ------------------ | ------ | -------------- | --------- | -------- |
+| :white_check_mark: | POST   | /auth/login    | No        | Log in   |
+| :white_check_mark: | POST   | /auth/register | No        | Register |
+| :white_check_mark: | GET    | /auth/me       | Yes       | Me User  |
 
-### Users
+### User
 
 | Done               | Method | URI                   | authorize | comment          |
 | ------------------ | ------ | --------------------- | --------- | ---------------- |
@@ -66,8 +63,14 @@ Base Path: /api/v1
 | :white_check_mark: | POST   | /users                | Yes       | Create User      |
 | :white_check_mark: | PUT    | /users/:slug          | Yes       | Update User      |
 | :white_check_mark: | DELETE | /users/:slug          | Yes       | Delete User      |
-| :white_check_mark: | PUT    | /users/:slug/password | Yes       | Change Password  |
-| :white_check_mark: | PUT    | /users/:slug/avatar   | Yes       | Upload Avatar    |
+| :white_check_mark: | POST   | /users/:slug/password | Yes       | Change Password  |
+| :white_check_mark: | POST   | /users/:slug/avatar   | Yes       | Upload Avatar    |
+
+### Role
+
+| Done               | Method | URI    | authorize | comment    |
+| ------------------ | ------ | ------ | --------- | ---------- |
+| :white_check_mark: | GET    | /roles | Yes       | List Roles |
 
 ### Swaggo
 
@@ -81,7 +84,7 @@ URL: http://localhost:8000/api/v1/swagger/index.html
 
 ```
 
-URL: http://localhost:8000/media
+URL: http://localhost:8000/upload
 ```
 
 ## FOR DEV
