@@ -2,7 +2,9 @@ package models
 
 import (
 	"strings"
+	"time"
 
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/gosimple/slug"
 	"github.com/jinzhu/gorm"
 )
@@ -52,6 +54,23 @@ func (u User) Serialize() map[string]interface{} {
 		"roleId":    u.RoleID,
 		"role":      u.Role.Serialize(),
 	}
+}
+
+// GenerateJwtToken -- Generate JWT token associated to this user
+func (u *User) GenerateJwtToken() string {
+	// jwt.New(jwt.GetSigningMethod("HS512"))
+	jwtToken := jwtgo.New(jwtgo.SigningMethodHS256)
+
+	jwtToken.Claims = jwtgo.MapClaims{
+		"username": u.Username,
+		"roleId":   u.RoleID,
+		"slug":     u.Slug,
+		"orig_iat": time.Now().Add(time.Hour * 24 * 1).Unix(),
+		"exp":      time.Now().Add(time.Hour * 24 * 1).Unix(),
+	}
+	// Sign and get the complete encoded token as a string
+	token, _ := jwtToken.SignedString([]byte("secret key"))
+	return token
 }
 
 func (user *User) GetUserStatusAsString() string {

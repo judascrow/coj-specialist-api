@@ -20,6 +20,16 @@ func JSON(c *gin.Context, statusCode int, data interface{}, message interface{})
 
 }
 
+func JSONTOKEN(c *gin.Context, statusCode int, data interface{}, message interface{}, token string) {
+	c.JSON(statusCode, gin.H{
+		"success": true,
+		"data":    data,
+		"message": message,
+		"token":   token,
+	})
+
+}
+
 func JSONLIST(c *gin.Context, statusCode int, dataName string, data interface{}, message interface{}, p services.PageMeta) {
 
 	pageSize := p.PageSize

@@ -113,5 +113,5 @@ func Register(c *gin.Context) {
 	}
 
 	// Response
-	responses.JSON(c, http.StatusCreated, user.Serialize(), messages.Created+messages.User+messages.Success)
+	responses.JSONTOKEN(c, http.StatusCreated, user.Serialize(), messages.Created+messages.User+messages.Success, user.GenerateJwtToken())
 }

@@ -28,10 +28,6 @@ func ClaimsOwner(c *gin.Context, slug string) bool {
 
 	claims := jwt.ExtractClaims(c)
 
-	if int(claims["roleId"].(float64)) == 1 {
-		return true
-	}
-
 	if slug == claims["slug"].(string) || ClaimsIsAdmin(claims) {
 		return true
 	}

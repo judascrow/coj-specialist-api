@@ -5,7 +5,7 @@ import "github.com/jinzhu/gorm"
 type Role struct {
 	gorm.Model
 	Name        string `json:"name" gorm:"unique" example:"user"`
-	NameTH      string `json:"nameTh" gorm:"unique" example:"ผู้ใช้งานทั่วไป"`
+	NameTH      string `json:"nameTh" example:"ผู้ใช้งานทั่วไป"`
 	Description string `json:"description" example:"Only for standard users"`
 }
 

@@ -23,8 +23,8 @@ POST  {{baseUrl}}/auth/login
 POST {{baseUrl}}/auth/register
 
 {
-	"username": "user01",
-	"email": "user01@email.com",
+	"username": "user02",
+	"email": "user02@email.com",
 	"firstName": "john",
 	"lastName": "doe",
 	"password": "123456"
