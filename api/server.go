@@ -34,6 +34,9 @@ func drop(db *gorm.DB) {
 		&models.CasbinRule{},
 		&models.Role{},
 		&models.User{},
+		&models.Province{},
+		&models.District{},
+		&models.SubDistrict{},
 	)
 }
 
@@ -41,6 +44,9 @@ func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Role{})
 	db.AutoMigrate(&models.CasbinRule{})
+	db.AutoMigrate(&models.Province{})
+	db.AutoMigrate(&models.District{})
+	db.AutoMigrate(&models.SubDistrict{})
 }
 
 func addDbConstraints(db *gorm.DB) {

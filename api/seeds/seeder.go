@@ -1,6 +1,8 @@
 package seeds
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"math/rand"
 	"time"
 
@@ -140,6 +142,57 @@ func seedCasbinRule(db *gorm.DB) {
 
 }
 
+func seedProvince(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/provinces.json")
+	if err != nil {
+		panic(err)
+	}
+	provinces := []models.Province{}
+
+	err = json.Unmarshal([]byte(file), &provinces)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(provinces); i++ {
+		db.Where(&provinces[i]).FirstOrCreate(&models.Province{})
+	}
+}
+
+func seedDistrict(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/districts.json")
+	if err != nil {
+		panic(err)
+	}
+	districts := []models.District{}
+
+	err = json.Unmarshal([]byte(file), &districts)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(districts); i++ {
+		db.Where(&districts[i]).FirstOrCreate(&models.District{})
+	}
+}
+
+func seedSubDistricts(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/subdistricts.json")
+	if err != nil {
+		panic(err)
+	}
+	subDistricts := []models.SubDistrict{}
+
+	err = json.Unmarshal([]byte(file), &subDistricts)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(subDistricts); i++ {
+		db.Where(&subDistricts[i]).FirstOrCreate(&models.SubDistrict{})
+	}
+}
+
 func Seed() {
 	db := infrastructure.GetDB()
 	rand.Seed(time.Now().UnixNano())
@@ -147,4 +200,7 @@ func Seed() {
 	seedStaff(db)
 	seedUsers(db)
 	seedCasbinRule(db)
+	seedProvince(db)
+	seedDistrict(db)
+	seedSubDistricts(db)
 }

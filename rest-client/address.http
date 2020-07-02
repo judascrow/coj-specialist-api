@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:8080/api/v1/provinces
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTM3NDg0MzksIm9yaWdfaWF0IjoxNTkzNjYyMDM5LCJyb2xlSWQiOjEsInNsdWciOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4ifQ.smdUryvU8_avmHI5jQHwusyGFPMQ0oR52cB3IWYXEl4
+
+###
+
+# @name GetAllProvinces
+GET {{baseUrl}}
+Authorization: Bearer {{token}}
+
+###
+
+# @name GetDistrictsByProvinceID
+GET {{baseUrl}}/57/districts
+Authorization: Bearer {{token}}
+
+###
+
+# @name GetSubDistrictsByDistrictID
+GET {{baseUrl}}/57/districts/801/subDistricts
+Authorization: Bearer {{token}}
+
+###

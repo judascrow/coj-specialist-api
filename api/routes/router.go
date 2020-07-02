@@ -83,6 +83,12 @@ func InitRouter() *gin.Engine {
 		roles.GET("", controllers.GetAllRoles)
 	}
 
+	// Address API
+	provinces := apiv1.Group("/provinces")
+	provinces.GET("", controllers.GetAllProvinces)
+	provinces.GET("/:provinceID/districts", controllers.GetDistrictsByProvinceID)
+	provinces.GET("/:provinceID/districts/:districtID/subDistricts", controllers.GetSubDistrictsByDistrictID)
+
 	return r
 }
 
