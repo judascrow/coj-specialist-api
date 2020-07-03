@@ -66,6 +66,7 @@ type Profile struct {
 	WorkEmail           string     `json:"workEmail" form:"workEmail"`
 	BossFirstName       string     `json:"bossFirstName" form:"bossFirstName"`
 	BossLastName        string     `json:"bossLastName" form:"bossLastName"`
+	BossNo              string     `json:"bossNo" form:"bossNo"`
 	BossMoo             string     `json:"bossMoo" form:"bossMoo"`
 	BossSoi             string     `json:"bossSoi" form:"bossSoi"`
 	BossRoad            string     `json:"bossRoad" form:"bossRoad"`
