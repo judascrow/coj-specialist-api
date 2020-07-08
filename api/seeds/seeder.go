@@ -193,6 +193,40 @@ func seedSubDistricts(db *gorm.DB) {
 	}
 }
 
+func seedSplTypes(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/spltypes.json")
+	if err != nil {
+		panic(err)
+	}
+	splTypes := []models.SplType{}
+
+	err = json.Unmarshal([]byte(file), &splTypes)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(splTypes); i++ {
+		db.Where(&splTypes[i]).FirstOrCreate(&models.SplType{})
+	}
+}
+
+func seedSplSubTypes(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/splsubtypes.json")
+	if err != nil {
+		panic(err)
+	}
+	splSubTypes := []models.SplSubType{}
+
+	err = json.Unmarshal([]byte(file), &splSubTypes)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(splSubTypes); i++ {
+		db.Where(&splSubTypes[i]).FirstOrCreate(&models.SplSubType{})
+	}
+}
+
 func Seed() {
 	db := infrastructure.GetDB()
 	rand.Seed(time.Now().UnixNano())
@@ -203,4 +237,6 @@ func Seed() {
 	seedProvince(db)
 	seedDistrict(db)
 	seedSubDistricts(db)
+	seedSplTypes(db)
+	seedSplSubTypes(db)
 }

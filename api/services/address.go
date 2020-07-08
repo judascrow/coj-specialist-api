@@ -12,6 +12,13 @@ func FindAllProvinces() ([]models.Province, error) {
 	return provinces, err
 }
 
+func GetProvinceByID(id uint) (models.Province, error) {
+	db := infrastructure.GetDB()
+	var province models.Province
+	err := db.First(&province, id).Error
+	return province, err
+}
+
 func FindDistrictsByProvinceID(provinceID int) ([]models.District, error) {
 	db := infrastructure.GetDB()
 	var districts []models.District
@@ -38,4 +45,18 @@ func FindAllSubDistricts() ([]models.SubDistrict, error) {
 	var subDistricts []models.SubDistrict
 	err := db.Find(&subDistricts).Error
 	return subDistricts, err
+}
+
+func GetDistrictByID(id uint) (models.District, error) {
+	db := infrastructure.GetDB()
+	var district models.District
+	err := db.First(&district, id).Error
+	return district, err
+}
+
+func GetSubDistrictByID(id uint) (models.SubDistrict, error) {
+	db := infrastructure.GetDB()
+	var subDistrict models.SubDistrict
+	err := db.First(&subDistrict, id).Error
+	return subDistrict, err
 }

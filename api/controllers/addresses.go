@@ -29,6 +29,22 @@ func GetAllProvinces(c *gin.Context) {
 	responses.JSON(c, http.StatusOK, provincesSerialized, messages.DataFound)
 }
 
+func GetProvinceByID(c *gin.Context) {
+	provinceID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	province, err := services.GetProvinceByID(uint(provinceID))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
+	responses.JSON(c, http.StatusOK, province.Serialize(), messages.DataFound)
+}
+
 func GetDistrictsByProvinceID(c *gin.Context) {
 	provinceID, err := strconv.Atoi(c.Param("provinceID"))
 
@@ -78,4 +94,36 @@ func GetSubDistrictsByDistrictID(c *gin.Context) {
 
 	// Response
 	responses.JSON(c, http.StatusOK, subDistrictsSerialized, messages.DataFound)
+}
+
+func GetDistrictByID(c *gin.Context) {
+	districtID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	district, err := services.GetDistrictByID(uint(districtID))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
+	responses.JSON(c, http.StatusOK, district.Serialize(), messages.DataFound)
+}
+
+func GetSubDistrictByID(c *gin.Context) {
+	subDistrictID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	subDistrict, err := services.GetSubDistrictByID(uint(subDistrictID))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
+	responses.JSON(c, http.StatusOK, subDistrict.Serialize(), messages.DataFound)
 }

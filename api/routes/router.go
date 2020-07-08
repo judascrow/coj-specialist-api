@@ -84,10 +84,20 @@ func InitRouter() *gin.Engine {
 	}
 
 	// Address API
-	provinces := apiv1.Group("/provinces")
-	provinces.GET("", controllers.GetAllProvinces)
+
+	apiv1.GET("/provinces", controllers.GetAllProvinces)
+	apiv1.GET("/provinces/:id", controllers.GetProvinceByID)
+	apiv1.GET("/districts/:id", controllers.GetDistrictByID)
+	apiv1.GET("/subdistricts/:id", controllers.GetSubDistrictByID)
+
+	provinces := apiv1.Group("/province")
 	provinces.GET("/:provinceID/districts", controllers.GetDistrictsByProvinceID)
-	provinces.GET("/:provinceID/districts/:districtID/subDistricts", controllers.GetSubDistrictsByDistrictID)
+	provinces.GET("/:provinceID/district/:districtID/subDistricts", controllers.GetSubDistrictsByDistrictID)
+
+	// Speciallist Type API
+	splTypes := apiv1.Group("/spltypes")
+	splTypes.GET("", controllers.GetAllSplTypes)
+	splTypes.GET("/:splTypeID/splsubtypes", controllers.GetSplSubTypesBySplTypeID)
 
 	return r
 }
