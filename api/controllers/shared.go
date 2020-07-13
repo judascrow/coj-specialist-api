@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"math/rand"
+	"mime/multipart"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -41,4 +44,20 @@ func ClaimsIsAdmin(claims jwt.MapClaims) bool {
 	}
 
 	return false
+}
+
+func UploadFilePDF(c *gin.Context, file *multipart.FileHeader, userID uint) (string, error) {
+	var err error
+	fileURL := ""
+	if file != nil {
+		fileName := randomString(16) + ".pdf"
+		dirPath := filepath.Join(".", "uploads", "users", string(userID))
+		filePath := filepath.Join(dirPath, fileName)
+		if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+			err = os.MkdirAll(dirPath, os.ModeDir)
+		}
+		err = c.SaveUploadedFile(file, filePath)
+		fileURL = string(filepath.Separator) + filePath
+	}
+	return fileURL, err
 }

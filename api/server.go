@@ -39,6 +39,7 @@ func drop(db *gorm.DB) {
 		&models.SubDistrict{},
 		&models.SplType{},
 		&models.SplSubType{},
+		&models.Profile{},
 	)
 }
 
@@ -51,6 +52,7 @@ func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.SubDistrict{})
 	db.AutoMigrate(&models.SplType{})
 	db.AutoMigrate(&models.SplSubType{})
+	db.AutoMigrate(&models.Profile{})
 }
 
 func addDbConstraints(db *gorm.DB) {

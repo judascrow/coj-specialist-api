@@ -99,6 +99,13 @@ func InitRouter() *gin.Engine {
 	splTypes.GET("", controllers.GetAllSplTypes)
 	splTypes.GET("/:splTypeID/splsubtypes", controllers.GetSplSubTypesBySplTypeID)
 
+	// Reqform API
+	reqform := apiv1.Group("/reqforms")
+	reqform.Use(authMiddleware.MiddlewareFunc())
+	{
+		reqform.POST("", controllers.CreateProfile)
+	}
+
 	return r
 }
 

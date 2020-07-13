@@ -21,7 +21,8 @@ type User struct {
 	Avatar    string `json:"avatar" form:"avatar"`
 	RoleID    int    `json:"roleId" form:"roleId"`
 
-	Role Role `json:"role" `
+	Role    Role `json:"role" `
+	Profile Profile
 }
 
 type ChangePassword struct {
@@ -53,6 +54,7 @@ func (u User) Serialize() map[string]interface{} {
 		"avatar":    strings.Replace(u.Avatar, "\\", "/", replaceAllFlag),
 		"roleId":    u.RoleID,
 		"role":      u.Role.Serialize(),
+		"profile":   u.Profile.Serialize(),
 	}
 }
 
