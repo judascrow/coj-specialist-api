@@ -23,6 +23,15 @@ func CreateProfile(c *gin.Context) {
 		return
 	}
 
+	// Check username duplicate
+	profileCond := models.Profile{UserId: int(user.ID)}
+	_, err = services.GetProfileCondition(profileCond)
+	if err == nil {
+		errMessage := "ท่านเคยส่งข้อมูลคำขอขึ้นทะเบียนแล้ว"
+		responses.ERROR(c, http.StatusBadRequest, errMessage)
+		return
+	}
+
 	var profileRequest models.ProfileRequest
 
 	// Map jsonBody to struct

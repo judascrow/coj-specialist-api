@@ -67,3 +67,35 @@ func GetSplSubTypesBySplTypeID(c *gin.Context) {
 	// Response
 	responses.JSON(c, http.StatusOK, splSubTypesSerialized, messages.DataFound)
 }
+
+func GetSplTypeByID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	splType, err := services.GetSplTypeByID(uint(id))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+	}
+
+	// Response
+	responses.JSON(c, http.StatusOK, splType.Serialize(), messages.DataFound)
+}
+
+func GetSplSubTypeByID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	splSubType, err := services.GetSplSubTypeByID(uint(id))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+	}
+
+	// Response
+	responses.JSON(c, http.StatusOK, splSubType.Serialize(), messages.DataFound)
+}

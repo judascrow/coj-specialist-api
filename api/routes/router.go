@@ -97,7 +97,9 @@ func InitRouter() *gin.Engine {
 	// Speciallist Type API
 	splTypes := apiv1.Group("/spltypes")
 	splTypes.GET("", controllers.GetAllSplTypes)
+	apiv1.GET("/spltype/:id", controllers.GetSplTypeByID)
 	splTypes.GET("/:splTypeID/splsubtypes", controllers.GetSplSubTypesBySplTypeID)
+	apiv1.GET("/splsubtype/:id", controllers.GetSplSubTypeByID)
 
 	// Reqform API
 	reqform := apiv1.Group("/reqforms")

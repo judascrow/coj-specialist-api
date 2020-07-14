@@ -12,6 +12,7 @@ type Profile struct {
 	UserId                  int        `json:"userId" form:"userId"  gorm:"unique_index;DEFAULT:null"`
 	Status                  string     `json:"status" form:"status" sql:"type:enum('A','I');DEFAULT:'A'"`
 	IsSpecialist            *bool      `json:"isSpecialist" form:"isSpecialist" gorm:"DEFAULT:false"`
+	StatusReqform           string     `json:"statusReqform" form:"statusReqform" sql:"type:enum('edit','checking','verify','approved');DEFAULT:'checking'"`
 	IdCard                  string     `json:"idCard" form:"idCard"`
 	GovCard                 string     `json:"govCard" form:"govCard"`
 	CardExpire              *time.Time `json:"cardExpire" form:"cardExpire" gorm:"type:date"`
@@ -187,9 +188,11 @@ type ProfileRequest struct {
 func (p Profile) Serialize() map[string]interface{} {
 
 	return map[string]interface{}{
-		"firstName":    p.FirstName,
-		"lastName":     p.LastName,
-		"isSpecialist": p.IsSpecialist,
-		"idCard":       p.IdCard,
+		"prefixName":    p.PrefixName,
+		"firstName":     p.FirstName,
+		"lastName":      p.LastName,
+		"isSpecialist":  p.IsSpecialist,
+		"idCard":        p.IdCard,
+		"statusReqform": p.StatusReqform,
 	}
 }

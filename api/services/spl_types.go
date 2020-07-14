@@ -25,3 +25,17 @@ func FindAllSplSubTypesBySplTypeID(splTypeID int) ([]models.SplSubType, error) {
 	err := db.Set("gorm:auto_preload", true).Where(models.SplSubType{SplTypeID: splTypeID}).Find(&splSubTypes).Error
 	return splSubTypes, err
 }
+
+func GetSplTypeByID(id uint) (models.SplType, error) {
+	db := infrastructure.GetDB()
+	var splType models.SplType
+	err := db.First(&splType, id).Error
+	return splType, err
+}
+
+func GetSplSubTypeByID(id uint) (models.SplSubType, error) {
+	db := infrastructure.GetDB()
+	var splSubType models.SplSubType
+	err := db.Set("gorm:auto_preload", true).First(&splSubType, id).Error
+	return splSubType, err
+}

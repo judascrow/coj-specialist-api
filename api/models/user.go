@@ -41,6 +41,11 @@ func (u *User) BeforeSave(db *gorm.DB) (err error) {
 
 func (u User) Serialize() map[string]interface{} {
 
+	var profile map[string]interface{} = nil
+	if u.Profile.IdCard != "" {
+		profile = u.Profile.Serialize()
+	}
+
 	replaceAllFlag := -1
 
 	return map[string]interface{}{
@@ -54,7 +59,7 @@ func (u User) Serialize() map[string]interface{} {
 		"avatar":    strings.Replace(u.Avatar, "\\", "/", replaceAllFlag),
 		"roleId":    u.RoleID,
 		"role":      u.Role.Serialize(),
-		"profile":   u.Profile.Serialize(),
+		"profile":   profile,
 	}
 }
 

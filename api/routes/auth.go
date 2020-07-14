@@ -137,7 +137,7 @@ func AuthMiddlewareJWT() *jwt.GinJWTMiddleware {
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.JSON(code, gin.H{
 				"success": false,
-				"message": message,
+				"message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
 				"data":    map[string]interface{}{},
 			})
 		},

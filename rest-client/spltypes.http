@@ -14,3 +14,15 @@ GET {{baseUrl}}/12/splsubtypes
 Authorization: Bearer {{token}}
 
 ###
+
+# @name GetSplTypeByID
+GET http://localhost:8080/api/v1/spltype/1
+Authorization: Bearer {{token}}
+
+###
+
+# @name GetSplSubTypeByID
+GET http://localhost:8080/api/v1/splsubtype/1
+Authorization: Bearer {{token}}
+
+###
