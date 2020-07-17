@@ -106,6 +106,7 @@ func InitRouter() *gin.Engine {
 	reqform.Use(authMiddleware.MiddlewareFunc())
 	{
 		reqform.POST("", controllers.CreateProfile)
+		reqform.GET("", controllers.GetAllReqforms)
 	}
 
 	return r

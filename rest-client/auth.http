@@ -13,7 +13,7 @@ GET {{baseUrl}}/healthcheck
 POST  {{baseUrl}}/auth/login
 
 {
-    "username": "testuser",
+    "username": "admin",
     "password": "password"
 }
 

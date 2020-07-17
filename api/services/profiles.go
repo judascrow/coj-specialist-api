@@ -19,9 +19,9 @@ func GetProfileByID(id uint) (models.Profile, error) {
 	return profile, err
 }
 
-func GetProfileCondition(Condition interface{}) (models.Profile, error) {
+func GetProfileCondition(Condition interface{}) ([]models.Profile, error) {
 	db := infrastructure.GetDB()
-	var profile models.Profile
-	err := db.Where(Condition).Find(&profile).Error
-	return profile, err
+	var profiles []models.Profile
+	err := db.Where(Condition).Find(&profiles).Error
+	return profiles, err
 }

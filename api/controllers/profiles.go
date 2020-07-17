@@ -12,6 +12,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetAllReqforms(c *gin.Context) {
+
+	var condition models.Profile
+	if err := c.BindQuery(&condition); err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	reqforms, err := services.GetProfileCondition(condition)
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+	responses.JSON(c, http.StatusOK, reqforms, messages.DataFound)
+}
+
 func CreateProfile(c *gin.Context) {
 
 	claims := jwt.ExtractClaims(c)

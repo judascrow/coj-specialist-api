@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/icrowley/fake"
 	"github.com/jinzhu/gorm"
 	"github.com/judascrow/cojspcl-api/api/infrastructure"
 	"github.com/judascrow/cojspcl-api/api/models"
@@ -105,6 +104,34 @@ func seedStaff(db *gorm.DB) {
 	}
 }
 
+// func seedUsers(db *gorm.DB) {
+// 	count := 0
+// 	role := models.Role{Name: "user", NameTH: "ผู้ใช้งานทั่วไป", Description: "Only for standard users"}
+// 	q := db.Model(&models.Role{}).Where("name = ?", "user")
+// 	q.Count(&count)
+
+// 	if count == 0 {
+// 		db.Create(&role)
+// 	} else {
+// 		q.First(&role)
+// 	}
+
+// 	var standardUsers []models.User
+// 	db.Model(&role).Related(&standardUsers, "Users")
+// 	usersCount := len(standardUsers)
+// 	usersToSeed := 5
+// 	usersToSeed -= usersCount
+// 	if usersToSeed > 0 {
+// 		for i := 0; i < usersToSeed; i++ {
+// 			password, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
+// 			user := models.User{FirstName: fake.FirstName(), LastName: fake.LastName(), Email: fake.EmailAddress(), Username: fake.UserName(),
+// 				Password: string(password), RoleID: 3}
+// 			// No need to add the role as we did for seedAdmin, it is added by the BeforeSave hook
+// 			db.Set("gorm:association_autoupdate", false).Create(&user)
+// 		}
+// 	}
+// }
+
 func seedUsers(db *gorm.DB) {
 	count := 0
 	role := models.Role{Name: "user", NameTH: "ผู้ใช้งานทั่วไป", Description: "Only for standard users"}
@@ -117,19 +144,22 @@ func seedUsers(db *gorm.DB) {
 		q.First(&role)
 	}
 
-	var standardUsers []models.User
-	db.Model(&role).Related(&standardUsers, "Users")
-	usersCount := len(standardUsers)
-	usersToSeed := 5
-	usersToSeed -= usersCount
-	if usersToSeed > 0 {
-		for i := 0; i < usersToSeed; i++ {
-			password, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
-			user := models.User{FirstName: fake.FirstName(), LastName: fake.LastName(), Email: fake.EmailAddress(), Username: fake.UserName(),
-				Password: string(password), RoleID: 3}
-			// No need to add the role as we did for seedAdmin, it is added by the BeforeSave hook
-			db.Set("gorm:association_autoupdate", false).Create(&user)
-		}
+	file, err := ioutil.ReadFile("./data/users.json")
+	if err != nil {
+		panic(err)
+	}
+	users := []models.User{}
+
+	err = json.Unmarshal([]byte(file), &users)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(users); i++ {
+		password, _ := bcrypt.GenerateFromPassword([]byte(users[i].Password), bcrypt.DefaultCost)
+		users[i].Password = string(password)
+		users[i].RoleID = 3
+		db.Where(&users[i]).FirstOrCreate(&models.User{})
 	}
 }
 
@@ -227,16 +257,34 @@ func seedSplSubTypes(db *gorm.DB) {
 	}
 }
 
+func seedProfiles(db *gorm.DB) {
+	file, err := ioutil.ReadFile("./data/reqforms.json")
+	if err != nil {
+		panic(err)
+	}
+	profiles := []models.Profile{}
+
+	err = json.Unmarshal([]byte(file), &profiles)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(profiles); i++ {
+		db.Where(&profiles[i]).FirstOrCreate(&models.Profile{})
+	}
+}
+
 func Seed() {
 	db := infrastructure.GetDB()
 	rand.Seed(time.Now().UnixNano())
 	seedAdmin(db)
 	seedStaff(db)
 	seedUsers(db)
-	seedCasbinRule(db)
-	seedProvince(db)
-	seedDistrict(db)
-	seedSubDistricts(db)
-	seedSplTypes(db)
-	seedSplSubTypes(db)
+	// seedCasbinRule(db)
+	// seedProvince(db)
+	// seedDistrict(db)
+	// seedSubDistricts(db)
+	// seedSplTypes(db)
+	// seedSplSubTypes(db)
+	seedProfiles(db)
 }
