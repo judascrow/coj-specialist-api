@@ -277,9 +277,9 @@ func seedProfiles(db *gorm.DB) {
 func Seed() {
 	db := infrastructure.GetDB()
 	rand.Seed(time.Now().UnixNano())
-	seedAdmin(db)
-	seedStaff(db)
-	seedUsers(db)
+	// seedAdmin(db)
+	// seedStaff(db)
+	// seedUsers(db)
 	// seedCasbinRule(db)
 	// seedProvince(db)
 	// seedDistrict(db)

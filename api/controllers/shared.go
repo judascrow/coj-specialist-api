@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"math/rand"
 	"mime/multipart"
 	"os"
@@ -48,10 +49,11 @@ func ClaimsIsAdmin(claims jwt.MapClaims) bool {
 
 func UploadFilePDF(c *gin.Context, file *multipart.FileHeader, userID uint) (string, error) {
 	var err error
+	userDir := fmt.Sprint(userID)
 	fileURL := ""
 	if file != nil {
 		fileName := randomString(16) + ".pdf"
-		dirPath := filepath.Join(".", "uploads", "users", string(userID))
+		dirPath := filepath.Join(".", "uploads", "users", userDir)
 		filePath := filepath.Join(dirPath, fileName)
 		if _, err := os.Stat(dirPath); os.IsNotExist(err) {
 			err = os.MkdirAll(dirPath, os.ModeDir)

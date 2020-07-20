@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/judascrow/cojspcl-api/api/models"
@@ -41,8 +42,8 @@ func CreateProfile(c *gin.Context) {
 
 	// Check username duplicate
 	profileCond := models.Profile{UserId: int(user.ID)}
-	_, err = services.GetProfileCondition(profileCond)
-	if err == nil {
+	profilesCheck, err := services.GetProfileCondition(profileCond)
+	if err == nil && len(profilesCheck) > 0 {
 		errMessage := "ท่านเคยส่งข้อมูลคำขอขึ้นทะเบียนแล้ว"
 		responses.ERROR(c, http.StatusBadRequest, errMessage)
 		return
@@ -53,6 +54,7 @@ func CreateProfile(c *gin.Context) {
 	// Map jsonBody to struct
 	err = c.ShouldBind(&profileRequest)
 	if err != nil {
+		fmt.Println(err)
 		responses.ERROR(c, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -70,10 +72,10 @@ func CreateProfile(c *gin.Context) {
 		return
 	}
 	profileData.UserId = int(user.ID)
-	profileData.FileAttachIdcard = fileAttachIdcard
-	profileData.FileAttachHouse = fileAttachHouse
-	profileData.FileAttachGovCard = fileAttachGovCard
-	profileData.FileAttachQualification = fileAttachQualification
+	profileData.FileAttachIdcardURL = fileAttachIdcard
+	profileData.FileAttachHouseURL = fileAttachHouse
+	profileData.FileAttachGovCardURL = fileAttachGovCard
+	profileData.FileAttachQualificationURL = fileAttachQualification
 
 	// Create user
 	if err = services.CreateOne(&profileData); err != nil {
