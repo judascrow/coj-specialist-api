@@ -107,6 +107,8 @@ func InitRouter() *gin.Engine {
 	{
 		reqform.POST("", controllers.CreateProfile)
 		reqform.GET("", controllers.GetAllReqforms)
+		reqform.PUT("/:id", controllers.UpdateProfile)
+		reqform.DELETE("/:id", controllers.DeleteProfile)
 	}
 
 	return r

@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:8080/api/v1
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTQ3ODQxNDcsIm9yaWdfaWF0IjoxNTk0Njk3NzQ3LCJyb2xlSWQiOjMsInNsdWciOiJ0ZXN0dXNlciIsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.SGUlXlMTZ-b0a17tQkwGGeLyvx7on9XncMvkxHQfjU8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTUzMjExOTksIm9yaWdfaWF0IjoxNTk1MjM0Nzk5LCJyb2xlSWQiOjEsInNsdWciOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4ifQ.AAmnamChETkDsLS33YVUEnv7nZLleGhncgluIWhch-k
+
 
 ###
 
@@ -7,3 +8,12 @@
 GET {{baseUrl}}/reqforms
 Authorization: Bearer {{token}}
 
+###
+
+# @name UpdateReqform
+PUT {{baseUrl}}/reqforms/1
+Authorization: Bearer {{token}}
+
+{
+    "statusReqform": "verify"
+}

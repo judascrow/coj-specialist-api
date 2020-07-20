@@ -25,3 +25,16 @@ func GetProfileCondition(Condition interface{}) ([]models.Profile, error) {
 	err := db.Where(Condition).Find(&profiles).Error
 	return profiles, err
 }
+
+func UpdateProfile(id uint, data interface{}) (models.Profile, error) {
+	db := infrastructure.GetDB()
+	var profile models.Profile
+	err := db.Model(profile).Set("gorm:auto_preload", true).Where("id = ?", id).Update(data).Take(&profile).Error
+	return profile, err
+}
+
+func DeleteProfile(id uint) error {
+	db := infrastructure.GetDB()
+	err := db.Unscoped().Where("id = ?", id).Delete(models.Profile{}).Error
+	return err
+}

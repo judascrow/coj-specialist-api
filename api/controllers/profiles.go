@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/judascrow/cojspcl-api/api/models"
 	"github.com/judascrow/cojspcl-api/api/services"
@@ -92,4 +93,42 @@ func CreateProfile(c *gin.Context) {
 
 	// Response
 	responses.JSON(c, http.StatusCreated, profile, "ส่งคำขอขึ้นทะเบียนเรียบร้อยแล้ว")
+}
+
+func UpdateProfile(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var profile models.Profile
+	err = c.BindJSON(&profile)
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, messages.ErrorsResponse(err))
+		return
+	}
+
+	if profile, err = services.UpdateProfile(uint(id), profile); err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	responses.JSON(c, http.StatusOK, profile, messages.Updated+"ข้อมูล"+messages.Success)
+}
+
+func DeleteProfile(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = services.DeleteProfile(uint(id))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	responses.JSONNODATA(c, http.StatusNoContent, messages.Deleted+"ข้อมูล"+messages.Success)
 }
