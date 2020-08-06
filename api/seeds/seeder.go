@@ -168,7 +168,7 @@ func seedCasbinRule(db *gorm.DB) {
 
 	db.Where(&models.CasbinRule{PType: "p", V0: "1", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)|(DELETE)"}).FirstOrCreate(&casbinRule[0])
 	db.Where(&models.CasbinRule{PType: "p", V0: "2", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)|(DELETE)"}).FirstOrCreate(&casbinRule[1])
-	db.Where(&models.CasbinRule{PType: "p", V0: "3", V1: "/api/v1/auth/me"}).Attrs(models.CasbinRule{V2: "(GET)|(PUT)"}).FirstOrCreate(&casbinRule[2])
+	db.Where(&models.CasbinRule{PType: "p", V0: "3", V1: "/api/v1/*"}).Attrs(models.CasbinRule{V2: "(GET)|(POST)|(PUT)"}).FirstOrCreate(&casbinRule[2])
 
 }
 
@@ -277,14 +277,14 @@ func seedProfiles(db *gorm.DB) {
 func Seed() {
 	db := infrastructure.GetDB()
 	rand.Seed(time.Now().UnixNano())
-	// seedAdmin(db)
-	// seedStaff(db)
-	// seedUsers(db)
-	// seedCasbinRule(db)
-	// seedProvince(db)
-	// seedDistrict(db)
-	// seedSubDistricts(db)
-	// seedSplTypes(db)
-	// seedSplSubTypes(db)
+	seedAdmin(db)
+	seedStaff(db)
+	seedUsers(db)
+	seedCasbinRule(db)
+	seedProvince(db)
+	seedDistrict(db)
+	seedSubDistricts(db)
+	seedSplTypes(db)
+	seedSplSubTypes(db)
 	seedProfiles(db)
 }

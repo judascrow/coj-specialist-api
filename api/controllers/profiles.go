@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/judascrow/cojspcl-api/api/models"
 	"github.com/judascrow/cojspcl-api/api/services"
@@ -28,6 +29,26 @@ func GetAllReqforms(c *gin.Context) {
 		return
 	}
 	responses.JSON(c, http.StatusOK, reqforms, messages.DataFound)
+}
+
+func GetProfile(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	profile, err := services.GetProfileByID(uint(id))
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
+	replaceAllFlag := -1
+	profile.FileAttachIdcardURL = strings.Replace(profile.FileAttachIdcardURL, "\\", "/", replaceAllFlag)
+
+	responses.JSON(c, http.StatusOK, profile, messages.DataFound)
 }
 
 func CreateProfile(c *gin.Context) {
@@ -103,15 +124,53 @@ func UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	var profile models.Profile
-	err = c.BindJSON(&profile)
+	var profileRequest models.ProfileRequest
+
+	// Map jsonBody to struct
+	err = c.ShouldBind(&profileRequest)
+	if err != nil {
+		fmt.Println(err)
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	fileAttachIdcard, err := UploadFilePDF(c, profileRequest.FileAttachIdcard, uint(id))
+	fileAttachHouse, err := UploadFilePDF(c, profileRequest.FileAttachHouse, uint(id))
+	fileAttachGovCard, err := UploadFilePDF(c, profileRequest.FileAttachGovCard, uint(id))
+	fileAttachQualification, err := UploadFilePDF(c, profileRequest.FileAttachQualification, uint(id))
+
+	var profileData models.Profile
+	// Map jsonBody to struct
+	err = c.ShouldBind(&profileData)
 	if err != nil {
 		responses.ERROR(c, http.StatusBadRequest, messages.ErrorsResponse(err))
 		return
 	}
+	profileData.UserId = int(uint(id))
+	profileData.FileAttachIdcardURL = fileAttachIdcard
+	profileData.FileAttachHouseURL = fileAttachHouse
+	profileData.FileAttachGovCardURL = fileAttachGovCard
+	profileData.FileAttachQualificationURL = fileAttachQualification
 
-	if profile, err = services.UpdateProfile(uint(id), profile); err != nil {
+	if profileData.StatusReqform == "approved" {
+		t := true
+		profileData.IsSpecialist = &t
+	} else {
+		t := false
+		profileData.IsSpecialist = &t
+	}
+
+	profileData.UserId = 0
+
+	if profileData, err = services.UpdateProfile(uint(id), profileData); err != nil {
 		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// Find User
+	profile, err := services.GetProfileByID(profileData.ID)
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
 		return
 	}
 

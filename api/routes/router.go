@@ -39,7 +39,7 @@ func InitRouter() *gin.Engine {
 
 	r.MaxMultipartMemory = 8 << 20
 	// File Server
-	r.Use(static.Serve("/upload", static.LocalFile("./upload", false)))
+	r.Use(static.Serve("/uploads", static.LocalFile("./uploads", false)))
 
 	// Routes
 	apiv1 := r.Group(os.Getenv("APP_API_BASE_URL"))
@@ -107,6 +107,7 @@ func InitRouter() *gin.Engine {
 	{
 		reqform.POST("", controllers.CreateProfile)
 		reqform.GET("", controllers.GetAllReqforms)
+		reqform.GET("/:id", controllers.GetProfile)
 		reqform.PUT("/:id", controllers.UpdateProfile)
 		reqform.DELETE("/:id", controllers.DeleteProfile)
 	}
