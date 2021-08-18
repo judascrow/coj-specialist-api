@@ -15,6 +15,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetAllProfileLists(c *gin.Context) {
+
+	var condition models.Profile
+	if err := c.BindQuery(&condition); err != nil {
+		responses.ERROR(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	reqforms, err := services.GetProfileCondition(condition)
+	if err != nil {
+		responses.ERROR(c, http.StatusNotFound, messages.NotFound)
+		return
+	}
+
+	// Serialize
+	length := len(reqforms)
+	reqformsSerialized := make([]map[string]interface{}, length, length)
+	for i := 0; i < length; i++ {
+		reqformsSerialized[i] = reqforms[i].SerializeList()
+	}
+
+	responses.JSON(c, http.StatusOK, reqformsSerialized, messages.DataFound)
+}
+
 func GetAllReqforms(c *gin.Context) {
 
 	var condition models.Profile

@@ -95,6 +95,8 @@ type Profile struct {
 	FileAttachGovCardURL       string     `json:"fileAttachGovCardURL" form:"fileAttachGovCardURL"`
 	FileAttachQualificationURL string     `json:"fileAttachQualificationURL" form:"fileAttachQualificationURL"`
 	Remark                     string     `json:"remark" form:"remark"`
+
+	SplSubType SplSubType `json:"SplSubType" form:"SplSubType"`
 }
 
 type ProfileRequest struct {
@@ -194,5 +196,15 @@ func (p Profile) Serialize() map[string]interface{} {
 		"isSpecialist":  p.IsSpecialist,
 		"idCard":        p.IdCard,
 		"statusReqform": p.StatusReqform,
+	}
+}
+
+func (p Profile) SerializeList() map[string]interface{} {
+	return map[string]interface{}{
+		"firstName":  p.FirstName,
+		"lastName":   p.LastName,
+		"email":      p.ContactEmail,
+		"SplType":    p.SplSubType.SplType.NameTH,
+		"SplSubType": p.SplSubType.NameTH,
 	}
 }

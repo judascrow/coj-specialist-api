@@ -22,7 +22,7 @@ func GetProfileByID(id uint) (models.Profile, error) {
 func GetProfileCondition(Condition interface{}) ([]models.Profile, error) {
 	db := infrastructure.GetDB()
 	var profiles []models.Profile
-	err := db.Where(Condition).Find(&profiles).Error
+	err := db.Preload("SplSubType").Preload("SplSubType.SplType").Where(Condition).Find(&profiles).Error
 	return profiles, err
 }
 
