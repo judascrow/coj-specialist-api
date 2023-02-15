@@ -15,8 +15,7 @@ require (
 	github.com/jinzhu/gorm v1.9.15
 	github.com/joho/godotenv v1.3.0
 	github.com/judascrow/gomiddlewares v0.0.0-20200602081535-5d9916e77937
-	github.com/prometheus/client_golang v1.7.1 // indirect
-	github.com/sirupsen/logrus v1.6.0 // indirect
+	github.com/prometheus/client_golang v1.11.1 // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
